@@ -1,0 +1,1757 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Taller de ritmes</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+:root {
+  color-scheme: light;
+  --bg: #e9edf3;
+  --panel: #ffffff;
+  --panel-2: #f3f5f9;
+  --ink: #14213d;
+  --muted: #5d6a80;
+  --line: #ccd4e0;
+  --accent: #2f4fdd;
+  --accent-ink: #ffffff;
+  --hot: #e8590c;
+  --warn: #a8420a;
+  --ok: #1b7f3b;
+  --bad: #c92a2a;
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1320; --panel: #172033; --panel-2: #1e2940; --ink: #e8ecf5; --muted: #9aa7bf;
+    --line: #2f3c58; --accent: #8ea2ff; --accent-ink: #0e1320; --hot: #ff9f4a; --warn: #ffb27a; --ok: #6fd68f; --bad: #ff8787;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1320; --panel: #172033; --panel-2: #1e2940; --ink: #e8ecf5; --muted: #9aa7bf;
+  --line: #2f3c58; --accent: #8ea2ff; --accent-ink: #0e1320; --hot: #ff9f4a; --warn: #ffb27a; --ok: #6fd68f; --bad: #ff8787;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  padding-block: max(12px, env(safe-area-inset-top, 0px)) max(12px, env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.app { max-width: 1100px; margin-inline: auto; height: 100%; min-height: 520px; display: flex; flex-direction: column; gap: 12px; }
+header { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 2px 14px; }
+header h1 {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(24px, 4vw, 32px); letter-spacing: -0.02em; line-height: 1.15; margin: 0; text-wrap: balance;
+}
+header .sub { margin: 0; color: var(--muted); font-size: 16px; font-weight: 500; }
+header .crumb { margin: 0; color: var(--accent); font-size: 16px; font-weight: 600; }
+header .hdr-actions { margin-left: auto; display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ---------- pantalla d'idioma ---------- */
+.langscreen {
+  flex: 1 1 auto; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; text-align: center; width: 100%; max-width: 760px; margin-inline: auto;
+}
+.langscreen .mini { display: block; width: 100%; max-width: 340px; height: auto; background: var(--panel-2); border-radius: 12px; padding: 6px 8px; margin-bottom: 10px; }
+.langscreen h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 6vw, 46px); letter-spacing: -0.02em; line-height: 1.1; margin: 0; text-wrap: balance; }
+.langscreen .sub { margin: 0; color: var(--muted); font-size: 16px; font-weight: 500; }
+.lang-names { margin: 0; color: var(--muted); font-size: 17px; }
+.lang-lead { margin: 18px 0 0; color: var(--ink); font-size: 17px; font-weight: 500; }
+.lang-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; width: 100%; margin-top: 6px; }
+.lang-card { align-items: center; text-align: center; gap: 10px; padding: 24px 18px; }
+.card .code { font: 700 13px var(--font-display); letter-spacing: .08em; color: var(--accent); border: 1.5px solid var(--accent); border-radius: 999px; padding: 2px 12px; }
+.level-card .code { align-self: flex-start; }
+.level-card h2 { margin-top: 2px; }
+.level-card p { font-size: 14px; }
+.home.levelscreen { max-width: 1000px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); align-content: start; padding-top: 4px; }
+.levelscreen .level-title { grid-column: 1 / -1; margin: 0; text-align: center; font: 700 clamp(24px, 4vw, 32px) var(--font-display); letter-spacing: -0.02em; }
+.lang-card .lname { font: 700 24px var(--font-display); letter-spacing: -0.01em; }
+
+/* ---------- inici ---------- */
+.home {
+  flex: 1 1 auto; align-content: center; justify-items: stretch;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px;
+  width: 100%; max-width: 1000px; margin-inline: auto;
+}
+.home-lead { grid-column: 1 / -1; margin: 0; text-align: center; color: var(--muted); font-size: 17px; font-weight: 500; }
+.card {
+  display: flex; flex-direction: column; gap: 10px; text-align: left;
+  padding: 22px; background: var(--panel); border: 1px solid var(--line); border-radius: 18px;
+  transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease;
+}
+.card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 8px 22px rgba(20, 33, 61, .10); }
+.card h2 { font: 700 23px var(--font-display); letter-spacing: -0.01em; margin: 0; }
+.card p { margin: 0; color: var(--muted); }
+.card .go { margin-top: 4px; font-weight: 600; color: var(--accent); }
+.card .mini { display: block; width: 100%; height: auto; background: var(--panel-2); border-radius: 12px; padding: 6px 8px; }
+
+/* ---------- vistes ---------- */
+.view { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: 12px; }
+.stage, .palette { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; }
+.stage { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+.palette { flex: none; }
+.bar { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; }
+button { font: inherit; color: inherit; cursor: pointer; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 14px; border-radius: 9px;
+  border: 1px solid var(--line); background: var(--panel-2); font-weight: 500;
+}
+.btn:hover:not(:disabled) { border-color: var(--muted); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; min-width: 132px; justify-content: center; }
+.btn.primary:hover:not(:disabled) { filter: brightness(1.06); border-color: var(--accent); }
+.btn svg { width: 16px; height: 16px; fill: currentColor; flex: none; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.opts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin-left: auto; }
+.meter { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: var(--muted); }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; background: var(--panel-2); }
+.seg button { border: 0; background: transparent; padding: 6px 12px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--muted); }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button:hover { color: var(--ink); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.tempo { display: flex; align-items: center; gap: 10px; }
+.tempo label, .chk { font-size: 13.5px; color: var(--muted); }
+.tempo output { font-variant-numeric: tabular-nums; min-width: 6.5ch; color: var(--ink); font-weight: 600; }
+input[type=range] { width: 130px; accent-color: var(--accent); }
+.chk { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.chk input { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; }
+
+.stage-main { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: row; align-items: stretch; }
+.staff-wrap { flex: 1 1 0; min-width: 0; min-height: 130px; position: relative; overflow: hidden; }
+.staff-wrap svg { position: absolute; top: 6px; left: 12px; width: calc(100% - 24px); height: calc(100% - 6px); display: block; overflow: visible; }
+.status { flex: none; padding: 8px 16px 10px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); }
+.status.warn { color: var(--warn); font-weight: 500; }
+.status.ok { color: var(--ok); font-weight: 600; }
+
+/* zona per tocar el ritme (lectura) */
+.pad-wrap { flex: none; width: clamp(150px, 24%, 240px); display: flex; padding: 10px 12px 10px 4px; }
+.pad {
+  width: 100%; height: 100%; min-height: 120px; padding: 12px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center;
+  border: 2px dashed var(--accent); border-radius: 14px; background: var(--panel-2);
+  user-select: none; -webkit-user-select: none; touch-action: manipulation;
+  transition: background .08s ease, border-color .08s ease, transform .08s ease;
+}
+.pad-main { font: 700 16px var(--font-display); line-height: 1.2; }
+.pad-sub { font-size: 13px; color: var(--muted); }
+.pad[data-state="off"] { border-color: var(--line); opacity: .6; cursor: not-allowed; }
+.pad[data-state="count"] { border-style: solid; border-color: var(--muted); }
+.pad[data-state="count"] .pad-main { font-size: 22px; }
+.pad[data-state="go"] { border-style: solid; background: color-mix(in srgb, var(--accent) 12%, var(--panel-2)); }
+.pad[data-state="ok"] { border-style: solid; border-color: var(--ok); background: color-mix(in srgb, var(--ok) 14%, var(--panel-2)); }
+.pad[data-state="ok"] .pad-main { color: var(--ok); }
+.pad[data-state="bad"] { border-style: solid; border-color: var(--bad); background: color-mix(in srgb, var(--bad) 12%, var(--panel-2)); }
+.pad[data-state="bad"] .pad-main { color: var(--bad); }
+.pad.hit { transform: scale(.985); border-color: var(--hot); background: color-mix(in srgb, var(--hot) 22%, var(--panel-2)); }
+
+/* dibuix de la partitura */
+.fig { color: var(--ink); }
+.fig.ok { color: var(--ok); }
+.fig.bad { color: var(--bad); }
+.fig.playing { color: var(--hot); }
+.hd { fill: currentColor; }
+.hd.open { fill: var(--panel); stroke: currentColor; stroke-width: 2.2; }
+.st { stroke: currentColor; stroke-width: 2; }
+.bm { fill: currentColor; }
+.fl { fill: none; stroke: currentColor; stroke-width: 3.2; stroke-linecap: round; }
+.tp { font: italic 700 12px var(--font-body); fill: currentColor; text-anchor: middle; }
+.rs { fill: none; stroke: currentColor; stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; }
+.rl { stroke: currentColor; stroke-width: 1.6; }
+.staffline { stroke: var(--ink); stroke-width: 1.6; opacity: .85; }
+.clef { fill: var(--ink); }
+.bar-solid { stroke: var(--ink); stroke-width: 1.8; }
+.bar-open { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 3 4; }
+.sig { font: 700 20px var(--font-display); fill: var(--ink); text-anchor: middle; }
+.mnum { font: 500 11px var(--font-body); fill: var(--muted); }
+.cnt { font: 600 12px var(--font-body); fill: var(--muted); text-anchor: middle; }
+.cnt.sub { font-weight: 500; font-size: 11px; opacity: .85; }
+.caret { stroke: var(--accent); stroke-width: 2; stroke-linecap: round; animation: blink 1.1s steps(2, jump-none) infinite; }
+.ph { stroke: var(--hot); stroke-width: 2.5; stroke-linecap: round; }
+@keyframes blink { 50% { opacity: .15; } }
+.hint-empty { font: 500 14px var(--font-body); fill: var(--muted); }
+.xmark { font: 700 16px var(--font-body); fill: var(--bad); text-anchor: middle; }
+
+.btn.strong { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.score { font-size: 13.5px; color: var(--muted); font-weight: 600; font-variant-numeric: tabular-nums; }
+.mk { font: 700 14px var(--font-body); text-anchor: middle; }
+.mk.ok { fill: var(--ok); }
+.mk.bad { fill: var(--bad); }
+
+/* paleta */
+.palette { padding: 6px 10px 8px; }
+.palette .head { margin-bottom: 6px; }
+.palette h2 { font: 700 14px var(--font-display); margin: 0; display: inline; }
+.palette .head p { margin: 0 0 0 8px; color: var(--muted); font-size: 12px; display: inline; line-height: 1.3; }
+.palette .acts { margin-left: 10px; white-space: nowrap; }
+.lnk { border: 0; background: none; color: var(--accent); font-weight: 600; font-size: 13.5px; padding: 2px 6px; text-decoration: underline; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(68px, 1fr)); gap: 5px; }
+.fig-btn {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 2px 3px 4px; text-align: center;
+  background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px;
+  transition: transform .12s ease, border-color .12s ease, background .12s ease;
+}
+.fig-btn:hover { border-color: var(--accent); transform: translateY(-2px); }
+.fig-btn:active { transform: translateY(0) scale(.98); }
+.fig-btn[aria-disabled="true"] { opacity: .45; }
+.fig-btn[aria-disabled="true"]:hover { border-color: var(--line); transform: none; }
+.fig-btn[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, var(--panel-2));
+  box-shadow: 0 0 0 1px var(--accent) inset;
+}
+.fig-btn[aria-pressed="true"]::after {
+  content: "\2713"; position: absolute; top: 5px; right: 8px;
+  font-size: 13px; font-weight: 700; color: var(--accent);
+}
+.fig-btn svg { width: 38px; height: auto; display: block; }
+.fig-btn .name { font-weight: 600; font-size: 11.5px; line-height: 1.15; }
+.fig-btn .dur { font-size: 10.5px; color: var(--muted); }
+.fig-btn kbd { font: 600 10px var(--font-body); color: var(--muted); border: 1px solid var(--line); border-radius: 5px; padding: 0 6px; background: var(--panel); }
+.fig-btn .fig { color: var(--ink); }
+
+@media (max-width: 640px) {
+  .opts { margin-left: 0; width: 100%; }
+  .btn.primary { flex: 1 1 100%; }
+  .stage-main { flex-direction: column; }
+  .pad-wrap { width: 100%; padding: 4px 12px 10px; }
+  .pad { height: auto; min-height: 56px; }
+  .pad-sub { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .caret { animation: none; }
+  .fig-btn, .card { transition: none; }
+  .fig-btn:hover, .fig-btn:active, .card:hover { transform: none; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header id="hdr" hidden>
+    <h1 data-i18n="title">Taller de ritmes</h1>
+    <p class="sub">Miguel Castellá</p>
+    <p class="crumb" id="crumb" hidden></p>
+    <div class="hdr-actions">
+      <button class="btn back" id="back" type="button" data-i18n="back" hidden>&larr; Inici</button>
+      <button class="btn" id="levelBtn" type="button" hidden></button>
+      <button class="btn" id="langBtn" type="button" data-i18n="langBtn">Idioma</button>
+    </div>
+  </header>
+
+  <section class="langscreen" id="langScreen" aria-labelledby="langTitle">
+    <span id="miniLang"></span>
+    <h1 id="langTitle">Taller de ritmes</h1>
+    <p class="lang-names">Taller de ritmos &middot; Rhythm Workshop</p>
+    <p class="sub">Miguel Castellá</p>
+    <p class="lang-lead">Tria l'idioma &middot; Elige el idioma &middot; Choose your language</p>
+    <div class="lang-grid" role="group" aria-label="Idioma / Language">
+      <button type="button" class="card lang-card" data-lang="va" lang="ca"><span class="code">VA</span><span class="lname">Valencià</span></button>
+      <button type="button" class="card lang-card" data-lang="es" lang="es"><span class="code">ES</span><span class="lname">Castellano</span></button>
+      <button type="button" class="card lang-card" data-lang="en" lang="en"><span class="code">EN</span><span class="lname">English</span></button>
+    </div>
+  </section>
+
+  <section class="home levelscreen" id="levelScreen" aria-labelledby="levelTitle" hidden>
+    <h2 class="level-title" id="levelTitle" data-i18n="levelTitle">Tria el nivell</h2>
+    <p class="home-lead" data-i18n="levelLead"></p>
+    <div id="levelGrid" style="display: contents"></div>
+  </section>
+
+  <section class="home" id="home" data-i18n-aria="homeAria" aria-label="Inici" hidden>
+    <p class="home-lead" data-i18n="homeLead">Tria una activitat</p>
+    <button type="button" class="card" data-go="build">
+      <span id="miniBuild"></span>
+      <h2 data-i18n="buildTitle">Constructor de ritmes</h2>
+      <p data-i18n="buildDesc"></p>
+      <span class="go" data-i18n="open">Obrir &rarr;</span>
+    </button>
+    <button type="button" class="card" data-go="read">
+      <span id="miniRead"></span>
+      <h2 data-i18n="readTitle">Lectura de ritmes</h2>
+      <p data-i18n="readDesc"></p>
+      <span class="go" data-i18n="open">Obrir &rarr;</span>
+    </button>
+    <button type="button" class="card" data-go="dict">
+      <span id="miniDict"></span>
+      <h2 data-i18n="dictTitle">Dictat de ritmes</h2>
+      <p data-i18n="dictDesc"></p>
+      <span class="go" data-i18n="open">Obrir &rarr;</span>
+    </button>
+  </section>
+
+  <div class="view" id="viewBuild" hidden></div>
+  <div class="view" id="viewRead" hidden></div>
+  <div class="view" id="viewDict" hidden></div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var TYPES = {
+    whole:       { beats: 4, onsets: [0],                   subs: [""] },
+    wholeRest:   { beats: 4, onsets: [],                    subs: [], isRest: true },
+    half:        { beats: 2, onsets: [0],                   subs: [""] },
+    halfRest:    { beats: 2, onsets: [],                    subs: [], isRest: true },
+    syncopation: { beats: 2, onsets: [0, 0.5, 1.5],         durs: [0.5, 1, 0.5], subs: ["", "&", "&"] },
+    dotted:      { beats: 2, onsets: [0, 1.5],              durs: [1.5, 0.5],    subs: ["", "&"] },
+    quarter:     { beats: 1, onsets: [0],                   subs: [""] },
+    rest:        { beats: 1, onsets: [],                    subs: [], isRest: true },
+    triplet:     { beats: 1, onsets: [0, 1 / 3, 2 / 3],     durs: [1 / 3, 1 / 3, 1 / 3], subs: ["", "la", "li"] },
+    eighths:     { beats: 1, onsets: [0, 0.5],              subs: ["", "&"] },
+    sixteenths:  { beats: 1, onsets: [0, 0.25, 0.5, 0.75],  subs: ["", "e", "&", "a"] }
+  };
+  /* figures disponibles en cada nivell (en l'ordre de la paleta) */
+  var LEVELS = {
+    1: ["quarter", "rest", "eighths"],
+    2: ["half", "halfRest", "quarter", "rest", "eighths", "sixteenths"],
+    3: ["whole", "wholeRest", "half", "halfRest", "syncopation", "dotted", "quarter", "rest", "triplet", "eighths", "sixteenths"]
+  };
+  var LEVEL_MINI = { 1: ["quarter", "rest", "eighths"], 2: ["half", "quarter", "eighths", "sixteenths"], 3: ["syncopation", "dotted", "triplet"] };
+  var KEYCH = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-"];
+
+  var PREFIX = 58, RH = 108, LINE_Y = 66;
+  var ctx = null;
+
+  /* ---------- idiomes ---------- */
+  var LANG = "va";
+  var I18N = {
+    va: {
+      title: "Taller de ritmes", back: "← Inici", langBtn: "Idioma", homeAria: "Inici", homeLead: "Tria una activitat",
+      buildTitle: "Constructor de ritmes", buildDesc: "Escriu el teu propi ritme afegint figures al pentagrama i escolta com sona.",
+      readTitle: "Lectura de ritmes", readDesc: "Tria les figures que vols practicar i llegeix un ritme creat amb elles.",
+      open: "Obrir →",
+      stageAria: "Ritme escrit", practice: "Practicar", cancel: "Cancel·lar", listen: "Escoltar", play: "Reproduir", stop: "Aturar",
+      newRhythm: "Nou ritme", undo: "Desfer", clear: "Buidar", meter: "Compàs", measures: "Compassos", tempo: "Tempo",
+      bpmOut: "{n} negres/min", metronome: "Metrònom", loop: "Repetir", showCount: "Mostrar el compte",
+      figures: "Figures", figuresAria: "Figures musicals",
+      readHelp: "Marca les figures que vols practicar: el ritme de dalt es crea només amb elles. Cada figura té la seua tecla, N per a un ritme nou i barra espaiadora per tocar.",
+      all: "Totes", none: "Cap",
+      buildHelp: "Fes clic en una figura per afegir-la al pentagrama. Compàs de {m}. Cada figura té la seua tecla i Retrocés desfà l'última.",
+      staffAria: "Pentagrama de ritme amb {n}", emptyRead: "Marca figures de baix per crear un ritme.", emptyBuild: "Pentagrama buit. Tria una figura de baix.",
+      noRoomTitle: "No cap: no hi ha prou temps al compàs", addLabel: "Afegir {name} ({dur})", figLabel: "{name} ({dur})",
+      selectOrNew: "Prem Nou ritme per crear-ne un.", selectFigs: "Marca les figures de baix que vols practicar i es crearà un ritme.",
+      readInfo: "{m} de {b}/4 · Llegeix el ritme, prem Practicar i toca'l. Amb Escoltar el pots sentir.",
+      buildEmpty: "Cap figura encara. Fes clic en una figura de baix per començar.",
+      missing1: "falta 1 per completar el compàs", missingN: "falten {n} per completar el compàs",
+      example: "Això és un exemple: prem Buidar per escriure el teu ritme.",
+      playing: "Reproduint…",
+      padIdle: "Zona per tocar", padIdleSub: "Prem Practicar i toca el ritme ací o amb la barra espaiadora, seguint el metrònom.",
+      padOff: "Encara no hi ha cap ritme", padOffSub: "Marca figures de baix per crear-ne un.",
+      padCount: "Compte…", padGo: "Toca!", padGoSub: "Clica ací o prem la barra espaiadora",
+      practiceStart: "Escolta el compte d'un compàs i toca el ritme.",
+      okRhythm: "Molt bé! Has tocat el ritme correctament.", okRests: "Molt bé! Aquest ritme només té silencis i no has tocat res.",
+      late: " Tendeixes a retardar-te una mica.", early: " Tendeixes a avançar-te una mica.",
+      padOk: "✓ Correcte!", padOkSub: "Prem Practicar per repetir-lo o Nou ritme per provar-ne un altre.",
+      padRestsOnly: "✗ Només hi ha silencis", padRestsOnlySub: "En aquest ritme no calia tocar res.",
+      statusRestsOnly: "No és correcte: aquest ritme només té silencis i no calia tocar res. Les × marquen on has tocat.",
+      badBase: "No és correcte: has encertat {h} de {e} notes",
+      missPiece1: "te'n falta 1", missPieceN: "te'n falten {n}", extraPiece1: "en sobra 1", extraPieceN: "en sobren {n}", and: " i ",
+      badEnd: ". Les figures en roig són les que cal revisar.", padBad: "✗ Torna-ho a provar",
+      padHits: "{h} de {e} notes encertades", padExtra: " · {n} de més",
+      noFit1: "Aquesta figura dura {d} i només en queda 1 al compàs. Tria'n una de més curta.",
+      noFitN: "Aquesta figura dura {d} i només en queden {r} al compàs. Tria'n una de més curta.",
+      noFill: "Marca almenys una figura de baix per crear un ritme.",
+      cantFill: "Amb aquestes figures no es pot omplir un compàs de {b}/4. Afig-ne una de més curta, per exemple una negra.",
+      meterChanged1: "Compàs de {b}/4. Una figura no cabia al compàs i s'ha substituït per una d'1 temps.",
+      meterChangedN: "Compàs de {b}/4. {n} figures no cabien al compàs i s'han substituït per figures d'1 temps.",
+      figure1: "figura", figureN: "figures", measure1: "compàs", measureN: "compassos", beat1: "temps", beatN: "temps",
+      fig_whole: "Redona", fig_wholeRest: "Silenci de redona", fig_half: "Blanca", fig_halfRest: "Silenci de blanca",
+      fig_quarter: "Negra", fig_rest: "Silenci de negra", fig_eighths: "2 corxeres", fig_sixteenths: "4 semicorxeres",
+      fig_syncopation: "Síncopa", fig_dotted: "Negra amb puntet i corxera", fig_triplet: "Tresillo de corxeres",
+      levelTitle: "Tria el nivell", levelLead: "Cada nivell té figures diferents. Pots canviar-lo quan vulgues.",
+      level: "Nivell {n}", levelTag1: "Fàcil", levelTag2: "Mitjà", levelTag3: "Difícil", levelFigs: "Figures: {l}.",
+      dictTitle: "Dictat de ritmes", dictDesc: "Escolta un ritme i escriu-lo triant les figures al pentagrama.",
+      dictHelp: "Escolta el ritme i fes clic en les figures per escriure'l. Compàs de {m}. Cada figura té la seua tecla, Retrocés desfà l'última, Intro comprova i la barra espaiadora escolta el dictat.",
+      check: "Comprovar", listenMine: "Escoltar la meua resposta", showSol: "Veure la solució", hideSol: "Amagar la solució", newDict: "Nou dictat",
+      dictStart: "Prem Escoltar, sent el compte d'un compàs i escriu el ritme amb les figures de baix.",
+      emptyDict: "Escolta el dictat i escriu-lo ací amb les figures de baix.",
+      dictPlaying: "Escoltant el dictat… (primer un compàs de compte)", minePlaying: "Reproduint la teua resposta…",
+      dMissing1: "falta 1 temps per completar el dictat", dMissingN: "falten {n} temps per completar el dictat",
+      dictReady: "dictat complet: prem Comprovar",
+      dictFull: "El dictat ja està complet. Prem Comprovar o desfés l'última figura per canviar-la.",
+      okDict: "Molt bé! Has escrit el ritme correctament.",
+      badDict: "No és correcte: has encertat {h} de {n} figures. Les figures en roig són les que cal revisar; escolta el dictat i la teua resposta per comparar-los.",
+      solShown: "Aquesta és la solució. Prem Nou dictat per provar-ne un altre o Amagar la solució per tornar a la teua resposta.",
+      score: "Dictats resolts: {c} de {a}"
+    },
+    es: {
+      title: "Taller de ritmos", back: "← Inicio", langBtn: "Idioma", homeAria: "Inicio", homeLead: "Elige una actividad",
+      buildTitle: "Constructor de ritmos", buildDesc: "Escribe tu propio ritmo añadiendo figuras al pentagrama y escucha cómo suena.",
+      readTitle: "Lectura de ritmos", readDesc: "Elige las figuras que quieres practicar y lee un ritmo creado con ellas.",
+      open: "Abrir →",
+      stageAria: "Ritmo escrito", practice: "Practicar", cancel: "Cancelar", listen: "Escuchar", play: "Reproducir", stop: "Detener",
+      newRhythm: "Nuevo ritmo", undo: "Deshacer", clear: "Vaciar", meter: "Compás", measures: "Compases", tempo: "Tempo",
+      bpmOut: "{n} negras/min", metronome: "Metrónomo", loop: "Repetir", showCount: "Mostrar el conteo",
+      figures: "Figuras", figuresAria: "Figuras musicales",
+      readHelp: "Marca las figuras que quieres practicar: el ritmo de arriba se crea solo con ellas. Cada figura tiene su tecla, N para un ritmo nuevo y barra espaciadora para tocar.",
+      all: "Todas", none: "Ninguna",
+      buildHelp: "Haz clic en una figura para añadirla al pentagrama. Compás de {m}. Cada figura tiene su tecla y Retroceso deshace la última.",
+      staffAria: "Pentagrama de ritmo con {n}", emptyRead: "Marca figuras abajo para crear un ritmo.", emptyBuild: "Pentagrama vacío. Elige una figura abajo.",
+      noRoomTitle: "No cabe: no hay tiempo suficiente en el compás", addLabel: "Añadir {name} ({dur})", figLabel: "{name} ({dur})",
+      selectOrNew: "Pulsa Nuevo ritmo para crear uno.", selectFigs: "Marca las figuras de abajo que quieras practicar y se creará un ritmo.",
+      readInfo: "{m} de {b}/4 · Lee el ritmo, pulsa Practicar y tócalo. Con Escuchar puedes oírlo.",
+      buildEmpty: "Aún no hay ninguna figura. Haz clic en una figura de abajo para empezar.",
+      missing1: "falta 1 para completar el compás", missingN: "faltan {n} para completar el compás",
+      example: "Esto es un ejemplo: pulsa Vaciar para escribir tu ritmo.",
+      playing: "Reproduciendo…",
+      padIdle: "Zona para tocar", padIdleSub: "Pulsa Practicar y toca el ritmo aquí o con la barra espaciadora, siguiendo el metrónomo.",
+      padOff: "Todavía no hay ningún ritmo", padOffSub: "Marca figuras abajo para crear uno.",
+      padCount: "Cuenta…", padGo: "¡Toca!", padGoSub: "Haz clic aquí o pulsa la barra espaciadora",
+      practiceStart: "Escucha la cuenta de un compás y toca el ritmo.",
+      okRhythm: "¡Muy bien! Has tocado el ritmo correctamente.", okRests: "¡Muy bien! Este ritmo solo tiene silencios y no has tocado nada.",
+      late: " Tiendes a retrasarte un poco.", early: " Tiendes a adelantarte un poco.",
+      padOk: "✓ ¡Correcto!", padOkSub: "Pulsa Practicar para repetirlo o Nuevo ritmo para probar otro.",
+      padRestsOnly: "✗ Solo hay silencios", padRestsOnlySub: "En este ritmo no había que tocar nada.",
+      statusRestsOnly: "No es correcto: este ritmo solo tiene silencios y no había que tocar nada. Las × marcan dónde has tocado.",
+      badBase: "No es correcto: has acertado {h} de {e} notas",
+      missPiece1: "te falta 1", missPieceN: "te faltan {n}", extraPiece1: "sobra 1", extraPieceN: "sobran {n}", and: " y ",
+      badEnd: ". Las figuras en rojo son las que hay que revisar.", padBad: "✗ Inténtalo de nuevo",
+      padHits: "{h} de {e} notas acertadas", padExtra: " · {n} de más",
+      noFit1: "Esta figura dura {d} y solo queda 1 tiempo en el compás. Elige una más corta.",
+      noFitN: "Esta figura dura {d} y solo quedan {r} tiempos en el compás. Elige una más corta.",
+      noFill: "Marca al menos una figura de abajo para crear un ritmo.",
+      cantFill: "Con estas figuras no se puede llenar un compás de {b}/4. Añade una más corta, por ejemplo una negra.",
+      meterChanged1: "Compás de {b}/4. Una figura no cabía en el compás y se ha sustituido por una de 1 tiempo.",
+      meterChangedN: "Compás de {b}/4. {n} figuras no cabían en el compás y se han sustituido por figuras de 1 tiempo.",
+      figure1: "figura", figureN: "figuras", measure1: "compás", measureN: "compases", beat1: "tiempo", beatN: "tiempos",
+      fig_whole: "Redonda", fig_wholeRest: "Silencio de redonda", fig_half: "Blanca", fig_halfRest: "Silencio de blanca",
+      fig_quarter: "Negra", fig_rest: "Silencio de negra", fig_eighths: "2 corcheas", fig_sixteenths: "4 semicorcheas",
+      fig_syncopation: "Síncopa", fig_dotted: "Negra con puntillo y corchea", fig_triplet: "Tresillo de corcheas",
+      levelTitle: "Elige el nivel", levelLead: "Cada nivel tiene figuras diferentes. Puedes cambiarlo cuando quieras.",
+      level: "Nivel {n}", levelTag1: "Fácil", levelTag2: "Medio", levelTag3: "Difícil", levelFigs: "Figuras: {l}.",
+      dictTitle: "Dictado de ritmos", dictDesc: "Escucha un ritmo y escríbelo eligiendo las figuras en el pentagrama.",
+      dictHelp: "Escucha el ritmo y haz clic en las figuras para escribirlo. Compás de {m}. Cada figura tiene su tecla, Retroceso deshace la última, Intro comprueba y la barra espaciadora escucha el dictado.",
+      check: "Comprobar", listenMine: "Escuchar mi respuesta", showSol: "Ver la solución", hideSol: "Ocultar la solución", newDict: "Nuevo dictado",
+      dictStart: "Pulsa Escuchar, oye la cuenta de un compás y escribe el ritmo con las figuras de abajo.",
+      emptyDict: "Escucha el dictado y escríbelo aquí con las figuras de abajo.",
+      dictPlaying: "Escuchando el dictado… (primero un compás de cuenta)", minePlaying: "Reproduciendo tu respuesta…",
+      dMissing1: "falta 1 tiempo para completar el dictado", dMissingN: "faltan {n} tiempos para completar el dictado",
+      dictReady: "dictado completo: pulsa Comprobar",
+      dictFull: "El dictado ya está completo. Pulsa Comprobar o deshaz la última figura para cambiarla.",
+      okDict: "¡Muy bien! Has escrito el ritmo correctamente.",
+      badDict: "No es correcto: has acertado {h} de {n} figuras. Las figuras en rojo son las que hay que revisar; escucha el dictado y tu respuesta para compararlos.",
+      solShown: "Esta es la solución. Pulsa Nuevo dictado para probar otro o Ocultar la solución para volver a tu respuesta.",
+      score: "Dictados resueltos: {c} de {a}"
+    },
+    en: {
+      title: "Rhythm Workshop", back: "← Home", langBtn: "Language", homeAria: "Home", homeLead: "Choose an activity",
+      buildTitle: "Rhythm builder", buildDesc: "Write your own rhythm by adding notes to the staff and listen to how it sounds.",
+      readTitle: "Rhythm reading", readDesc: "Choose the notes you want to practice and read a rhythm made from them.",
+      open: "Open →",
+      stageAria: "Written rhythm", practice: "Practice", cancel: "Cancel", listen: "Listen", play: "Play", stop: "Stop",
+      newRhythm: "New rhythm", undo: "Undo", clear: "Clear", meter: "Time signature", measures: "Measures", tempo: "Tempo",
+      bpmOut: "{n} quarter notes/min", metronome: "Metronome", loop: "Loop", showCount: "Show counting",
+      figures: "Notes and rests", figuresAria: "Musical notes and rests",
+      readHelp: "Select the notes you want to practice: the rhythm above is made only from them. Each note has its own key, N for a new rhythm and the space bar to play.",
+      all: "All", none: "None",
+      buildHelp: "Click a note to add it to the staff. Time signature: {m}. Each note has its own key and Backspace removes the last one.",
+      staffAria: "Rhythm staff with {n}", emptyRead: "Select notes below to create a rhythm.", emptyBuild: "Empty staff. Choose a note below.",
+      noRoomTitle: "Doesn't fit: not enough beats left in the measure", addLabel: "Add {name} ({dur})", figLabel: "{name} ({dur})",
+      selectOrNew: "Press New rhythm to create one.", selectFigs: "Select the notes below that you want to practice and a rhythm will be created.",
+      readInfo: "{m} of {b}/4 · Read the rhythm, press Practice and play it. Use Listen to hear it.",
+      buildEmpty: "No notes yet. Click a note below to start.",
+      missing1: "1 beat left to complete the measure", missingN: "{n} beats left to complete the measure",
+      example: "This is an example: press Clear to write your own rhythm.",
+      playing: "Playing…",
+      padIdle: "Tap area", padIdleSub: "Press Practice and play the rhythm here or with the space bar, following the metronome.",
+      padOff: "No rhythm yet", padOffSub: "Select notes below to create one.",
+      padCount: "Counting in…", padGo: "Play!", padGoSub: "Click here or press the space bar",
+      practiceStart: "Listen to the one-measure count-in and play the rhythm.",
+      okRhythm: "Well done! You played the rhythm correctly.", okRests: "Well done! This rhythm only has rests and you played nothing.",
+      late: " You tend to drag a little.", early: " You tend to rush a little.",
+      padOk: "✓ Correct!", padOkSub: "Press Practice to repeat it or New rhythm to try another.",
+      padRestsOnly: "✗ Only rests", padRestsOnlySub: "There was nothing to play in this rhythm.",
+      statusRestsOnly: "Not correct: this rhythm only has rests and there was nothing to play. The × marks show where you played.",
+      badBase: "Not correct: you got {h} of {e} notes right",
+      missPiece1: "1 is missing", missPieceN: "{n} are missing", extraPiece1: "1 is extra", extraPieceN: "{n} are extra", and: " and ",
+      badEnd: ". The notes in red are the ones to review.", padBad: "✗ Try again",
+      padHits: "{h} of {e} notes correct", padExtra: " · {n} extra",
+      noFit1: "This note lasts {d} and only 1 beat is left in the measure. Choose a shorter one.",
+      noFitN: "This note lasts {d} and only {r} beats are left in the measure. Choose a shorter one.",
+      noFill: "Select at least one note below to create a rhythm.",
+      cantFill: "These notes can't fill a {b}/4 measure. Add a shorter one, for example a quarter note.",
+      meterChanged1: "{b}/4 time. One note didn't fit in the measure and was replaced by a 1-beat note.",
+      meterChangedN: "{b}/4 time. {n} notes didn't fit in the measure and were replaced by 1-beat notes.",
+      figure1: "note", figureN: "notes", measure1: "measure", measureN: "measures", beat1: "beat", beatN: "beats",
+      fig_whole: "Whole note", fig_wholeRest: "Whole rest", fig_half: "Half note", fig_halfRest: "Half rest",
+      fig_quarter: "Quarter note", fig_rest: "Quarter rest", fig_eighths: "2 eighth notes", fig_sixteenths: "4 sixteenth notes",
+      fig_syncopation: "Syncopation", fig_dotted: "Dotted quarter + eighth", fig_triplet: "Eighth-note triplet",
+      levelTitle: "Choose your level", levelLead: "Each level has different notes. You can change it at any time.",
+      level: "Level {n}", levelTag1: "Easy", levelTag2: "Medium", levelTag3: "Hard", levelFigs: "Notes: {l}.",
+      dictTitle: "Rhythm dictation", dictDesc: "Listen to a rhythm and write it by choosing the notes on the staff.",
+      dictHelp: "Listen to the rhythm and click the notes to write it. Time signature: {m}. Each note has its own key, Backspace removes the last one, Enter checks and the space bar plays the dictation.",
+      check: "Check", listenMine: "Listen to my answer", showSol: "Show the solution", hideSol: "Hide the solution", newDict: "New dictation",
+      dictStart: "Press Listen, hear the one-measure count-in and write the rhythm using the notes below.",
+      emptyDict: "Listen to the dictation and write it here using the notes below.",
+      dictPlaying: "Playing the dictation… (one-measure count-in first)", minePlaying: "Playing your answer…",
+      dMissing1: "1 beat left to complete the dictation", dMissingN: "{n} beats left to complete the dictation",
+      dictReady: "dictation complete: press Check",
+      dictFull: "The dictation is already complete. Press Check or undo the last note to change it.",
+      okDict: "Well done! You wrote the rhythm correctly.",
+      badDict: "Not correct: you got {h} of {n} notes right. The notes in red are the ones to review; listen to the dictation and to your answer to compare them.",
+      solShown: "This is the solution. Press New dictation to try another or Hide the solution to go back to your answer.",
+      score: "Dictations solved: {c} of {a}"
+    }
+  };
+  function t(k, p) {
+    var d = I18N[LANG] || I18N.va;
+    var s = d[k] != null ? d[k] : (I18N.va[k] != null ? I18N.va[k] : k);
+    if (p) s = s.replace(/\{(\w+)\}/g, function (m, n) { return p[n] != null ? p[n] : m; });
+    return s;
+  }
+  function pl(n, base) { return n + " " + t(base + (n === 1 ? "1" : "N")); }
+  function tName(k) { return t("fig_" + k); }
+  function tDur(k) { return pl(TYPES[k].beats, "beat"); }
+
+  /* ---------- àudio ---------- */
+  function getCtx() {
+    if (!ctx) {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      ctx = new AC();
+    }
+    if (ctx.state === "suspended") ctx.resume();
+    return ctx;
+  }
+  function tone(dest, t, o) {
+    var osc = ctx.createOscillator(), g = ctx.createGain();
+    osc.type = o.type || "triangle";
+    osc.frequency.setValueAtTime(o.f, t);
+    osc.frequency.exponentialRampToValueAtTime(o.f * 0.82, t + o.dur);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(o.vol, t + 0.004);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + o.dur);
+    osc.connect(g); g.connect(dest);
+    osc.start(t); osc.stop(t + o.dur + 0.03);
+  }
+  function noteBeats(T, i) { return T.durs ? T.durs[i] : T.beats; }
+  function note(dest, t, beats, spb) {
+    var long = beats > 1;
+    tone(dest, t, { f: 560, type: "triangle", dur: long ? Math.min(1.1, beats * spb * 0.9) : 0.16, vol: long ? 0.55 : 0.6 });
+  }
+
+  /* ---------- dibuix de figures ---------- */
+  function head(x, open) {
+    return '<ellipse cx="' + x + '" cy="0" rx="7" ry="5" transform="rotate(-20 ' + x + ' 0)" class="hd' + (open ? ' open' : '') + '"/>';
+  }
+  function stem(x) {
+    return '<line class="st" x1="' + (x + 6.2) + '" y1="-2" x2="' + (x + 6.2) + '" y2="-38"/>';
+  }
+  function beam(x1, x2, y) {
+    return '<rect class="bm" x="' + (x1 + 5.2) + '" y="' + y + '" width="' + (x2 - x1 + 2) + '" height="5"/>';
+  }
+  function flag(x) {
+    return '<path class="fl" d="M' + (x + 6.2) + ',-38 C' + (x + 8) + ',-30 ' + (x + 16) + ',-26 ' + (x + 14) + ',-14"/>';
+  }
+  function dot(x) { return '<circle class="hd" cx="' + (x + 14) + '" cy="-5" r="2.4"/>'; }
+  function figHTML(type, bw) {
+    var s = "", i, d;
+    if (type === "whole") {
+      s = '<ellipse cx="0" cy="0" rx="8" ry="5.6" class="hd open" style="stroke-width:2.6"/>';
+    } else if (type === "wholeRest") {
+      s = '<line class="rl" x1="-18" y1="0" x2="18" y2="0"/><rect class="bm" x="-10" y="0" width="20" height="7" rx="0.8"/>';
+    } else if (type === "halfRest") {
+      s = '<line class="rl" x1="-18" y1="0" x2="18" y2="0"/><rect class="bm" x="-10" y="-7" width="20" height="7" rx="0.8"/>';
+    } else if (type === "half") {
+      s = head(0, true) + stem(0);
+    } else if (type === "quarter") {
+      s = head(0, false) + stem(0);
+    } else if (type === "rest") {
+      s = '<path class="rs" d="M-3,-20 L4,-11 L-3,-2 L4,8 C-3,6 -7,12 -1,18"/>';
+    } else if (type === "eighths") {
+      d = bw / 2;
+      s = head(0) + head(d) + stem(0) + stem(d) + beam(0, d, -38);
+    } else if (type === "sixteenths") {
+      d = bw / 4;
+      for (i = 0; i < 4; i++) s += head(i * d) + stem(i * d);
+      s += beam(0, 3 * d, -38) + beam(0, 3 * d, -30);
+    } else if (type === "syncopation") {
+      d = bw / 2;
+      s = head(0) + stem(0) + flag(0) + head(d) + stem(d) + head(3 * d) + stem(3 * d) + flag(3 * d);
+    } else if (type === "dotted") {
+      s = head(0) + stem(0) + dot(0) + head(1.5 * bw) + stem(1.5 * bw) + flag(1.5 * bw);
+    } else if (type === "triplet") {
+      d = bw / 3;
+      s = head(0) + head(d) + head(2 * d) + stem(0) + stem(d) + stem(2 * d) + beam(0, 2 * d, -38) +
+          '<text class="tp" x="' + (d + 6.2) + '" y="-44">3</text>';
+    }
+    return s;
+  }
+  function paletteSVG(type) {
+    var centers = { whole: 0, wholeRest: 0, half: 3, halfRest: 0, quarter: 3, rest: 0, eighths: 19, sixteenths: 27 };
+    var wide = { syncopation: { bw: 34, c: 30 }, dotted: { bw: 32, c: 28.1 }, triplet: { bw: 60, c: 19.6 } };
+    var bw = wide[type] ? wide[type].bw : 64, c = wide[type] ? wide[type].c : centers[type];
+    return '<svg viewBox="0 -54 80 78" aria-hidden="true"><g class="fig" transform="translate(' +
+      (40 - c) + ' 0)">' + figHTML(type, bw) + '</g></svg>';
+  }
+  function miniStaff(types) {
+    var adv = { eighths: 72, sixteenths: 72, triplet: 72, syncopation: 92, dotted: 92 };
+    var x = 24, last = 24, g = "";
+    types.forEach(function (ty) {
+      g += '<g class="fig" transform="translate(' + x + ' 0)">' + figHTML(ty, 34) + '</g>';
+      last = x;
+      x += adv[ty] || 52;
+    });
+    var W = Math.max(270, last + 60);
+    return '<svg class="mini" viewBox="0 -56 ' + W + ' 98" aria-hidden="true"><line class="staffline" x1="2" x2="' + (W - 2) + '" y1="0" y2="0"/>' + g + '</svg>';
+  }
+
+  /* ---------- tauler (constructor o lectura) ---------- */
+  function makeBoard(root, mode, level) {
+    var isRead = mode === "read";
+    var uid = "-" + mode;
+    var BEATS = 4;
+    var items = [];
+    var exampleShown = false;
+    var sel = {};
+    var ORDER = LEVELS[level].slice(), KEYMAP = {}, KEYLBL = {};
+    ORDER.forEach(function (k, i) { KEYMAP[KEYCH[i]] = k; KEYLBL[k] = KEYCH[i]; if (isRead) sel[k] = true; });
+    var PR = null, R = null, lastEnd = 0, padKey = "";
+    var nMeas = 2;
+    var L = { bw: 64, mw: 280, mpr: 2, W: 600 };
+    var P = null;
+
+    /* plantilla */
+    var h = '<section class="stage" aria-label="' + t("stageAria") + '"><div class="bar"><div class="btns">';
+    if (isRead) {
+      h += '<button class="btn primary" type="button" data-r="pract"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5"/></svg><span>' + t("practice") + '</span></button>';
+    }
+    h += '<button class="btn' + (isRead ? '' : ' primary') + '" type="button" data-r="play"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2l11 6-11 6z"/></svg><span>' + (isRead ? t("listen") : t("play")) + '</span></button>';
+    if (isRead) {
+      h += '<button class="btn" type="button" data-r="gen">' + t("newRhythm") + '</button>';
+    } else {
+      h += '<button class="btn" type="button" data-r="undo">' + t("undo") + '</button><button class="btn" type="button" data-r="clear">' + t("clear") + '</button>';
+    }
+    h += '</div><div class="opts">';
+    h += '<div class="meter"><span id="meterLbl' + uid + '">' + t("meter") + '</span><div class="seg" data-r="meter" role="group" aria-labelledby="meterLbl' + uid + '">' +
+         '<button type="button" data-n="2" aria-pressed="false">2/4</button>' +
+         '<button type="button" data-n="3" aria-pressed="false">3/4</button>' +
+         '<button type="button" data-n="4" aria-pressed="true">4/4</button></div></div>';
+    if (isRead) {
+      h += '<div class="meter"><span id="measLbl' + uid + '">' + t("measures") + '</span><div class="seg" data-r="meas" role="group" aria-labelledby="measLbl' + uid + '">' +
+           '<button type="button" data-n="1" aria-pressed="false">1</button>' +
+           '<button type="button" data-n="2" aria-pressed="true">2</button>' +
+           '<button type="button" data-n="4" aria-pressed="false">4</button></div></div>';
+    }
+    h += '<div class="tempo"><label for="bpm' + uid + '">' + t("tempo") + '</label><input type="range" id="bpm' + uid + '" data-r="bpm" min="40" max="180" step="2" value="66">' +
+         '<output data-r="bpmOut" for="bpm' + uid + '">' + t("bpmOut", { n: 66 }) + '</output></div>';
+    h += '<label class="chk"><input type="checkbox" data-r="metro"' + (isRead ? ' checked' : '') + '> ' + t("metronome") + '</label>';
+    h += '<label class="chk"><input type="checkbox" data-r="loop"> ' + t("loop") + '</label>';
+    h += '<label class="chk"><input type="checkbox" data-r="count"' + (isRead ? '' : ' checked') + '> ' + t("showCount") + '</label>';
+    h += '</div></div><div class="stage-main"><div class="staff-wrap" data-r="wrap"></div>';
+    if (isRead) h += '<div class="pad-wrap"><button type="button" class="pad" data-r="pad" data-state="off"><span class="pad-main"></span><span class="pad-sub"></span></button></div>';
+    h += '</div><div class="status" data-r="status" role="status" aria-live="polite"></div></section>';
+
+    h += '<section class="palette" aria-label="' + t("figuresAria") + '"><div class="head"><h2>' + t("figures") + '</h2>';
+    if (isRead) {
+      h += '<p>' + t("readHelp") + '</p>' +
+           '<span class="acts"><button type="button" class="lnk" data-r="all">' + t("all") + '</button><button type="button" class="lnk" data-r="none">' + t("none") + '</button></span>';
+    } else {
+      h += '<p>' + t("buildHelp", { m: '<span data-r="meterTxt">4/4</span>' }) + '</p>';
+    }
+    h += '</div><div class="grid" data-r="grid"></div></section>';
+    root.innerHTML = h;
+
+    function q(n) { return root.querySelector('[data-r="' + n + '"]'); }
+    var wrap = q("wrap"), statusEl = q("status"), playBtn = q("play"), grid = q("grid");
+    var bpmEl = q("bpm"), bpmOut = q("bpmOut"), metroEl = q("metro"), loopEl = q("loop"), countEl = q("count");
+    var undoBtn = q("undo"), clearBtn = q("clear"), genBtn = q("gen"), practBtn = q("pract"), pad = q("pad");
+
+    grid.innerHTML = ORDER.map(function (k) {
+      var T = TYPES[k];
+      return '<button type="button" class="fig-btn" data-type="' + k + '"' +
+        (isRead ? ' aria-pressed="' + (sel[k] ? "true" : "false") + '"' : '') +
+        ' aria-label="' + t(isRead ? "figLabel" : "addLabel", { name: tName(k).toLowerCase(), dur: tDur(k) }) + '">' +
+        paletteSVG(k) +
+        '<span class="name">' + tName(k) + '</span>' +
+        '<span class="dur">' + tDur(k) + ' &middot; <kbd>' + KEYLBL[k] + '</kbd></span></button>';
+    }).join("");
+
+    /* model */
+    function totalBeats() {
+      var n = 0;
+      for (var i = 0; i < items.length; i++) n += TYPES[items[i].t].beats;
+      return n;
+    }
+    function layout() {
+      var W = wrap.clientWidth - 24;
+      if (W < 100) W = 600;
+      L.W = W;
+      L.bw = Math.max(40, Math.min(54, (W - PREFIX - 8 - 24) / BEATS));
+      L.mw = BEATS * L.bw + 24;
+      L.mpr = Math.max(1, Math.floor((W - PREFIX - 8) / L.mw));
+    }
+    function xy(beat) {
+      var m = Math.floor(beat / BEATS);
+      var col = m % L.mpr, row = Math.floor(m / L.mpr);
+      return { x: PREFIX + col * L.mw + 16 + (beat % BEATS) * L.bw, y: row * RH + LINE_Y, row: row };
+    }
+
+    /* pintat */
+    function render() {
+      layout();
+      var total = totalBeats();
+      var measures = isRead ? Math.max(1, Math.ceil(total / BEATS))
+                            : (total % BEATS === 0 ? total / BEATS + 1 : Math.ceil(total / BEATS));
+      var rows = Math.ceil(measures / L.mpr);
+      var H = rows * RH + 4;
+      var s = '<svg viewBox="0 0 ' + L.W + ' ' + H + '" preserveAspectRatio="xMidYMin meet" role="img" aria-label="' + t("staffAria", { n: pl(items.length, "figure") }) + '">';
+      var r, m, col, y;
+      for (r = 0; r < rows; r++) {
+        y = r * RH + LINE_Y;
+        var inRow = Math.min(L.mpr, measures - r * L.mpr);
+        s += '<line class="staffline" x1="6" x2="' + (PREFIX + inRow * L.mw) + '" y1="' + y + '" y2="' + y + '"/>';
+        s += '<rect class="clef" x="12" y="' + (y - 12) + '" width="4.5" height="24" rx="1"/>';
+        s += '<rect class="clef" x="21" y="' + (y - 12) + '" width="4.5" height="24" rx="1"/>';
+        if (r === 0) {
+          s += '<text class="sig" x="44" y="' + (y - 3) + '">' + BEATS + '</text><text class="sig" x="44" y="' + (y + 17) + '">4</text>';
+        }
+      }
+      for (m = 0; m < measures; m++) {
+        col = m % L.mpr; r = Math.floor(m / L.mpr); y = r * RH + LINE_Y;
+        var bx = PREFIX + (col + 1) * L.mw - 6;
+        var complete = isRead ? total > 0 : m < Math.floor(total / BEATS);
+        s += '<text class="mnum" x="' + (PREFIX + col * L.mw + 4) + '" y="' + (r * RH + 16) + '">' + (m + 1) + '</text>';
+        s += '<line class="' + (complete ? 'bar-solid' : 'bar-open') + '" x1="' + bx + '" x2="' + bx + '" y1="' + (y - 14) + '" y2="' + (y + 14) + '"/>';
+      }
+
+      var beat = 0, i, p, T, showCount = countEl.checked;
+      for (i = 0; i < items.length; i++) {
+        T = TYPES[items[i].t];
+        p = xy(beat);
+        items[i]._start = beat;
+        s += '<g class="fig' + (R ? (R.ok[i] ? ' ok' : ' bad') : '') + '" data-i="' + i + '" transform="translate(' + p.x + ' ' + p.y + ')">' + figHTML(items[i].t, L.bw) + '</g>';
+        if (showCount) {
+          for (var k = 1; k < T.onsets.length; k++) {
+            var qq = xy(beat + T.onsets[k]);
+            s += '<text class="cnt sub" x="' + qq.x + '" y="' + (qq.y + 30) + '">' + T.subs[k] + '</text>';
+          }
+        }
+        beat += T.beats;
+      }
+      if (showCount) {
+        for (var b = 0; b < total; b++) {
+          var c = xy(b);
+          s += '<text class="cnt" x="' + c.x + '" y="' + (c.y + 30) + '">' + ((b % BEATS) + 1) + '</text>';
+        }
+      }
+      var cp = xy(total);
+      if (items.length === 0) {
+        s += '<text class="hint-empty" x="' + (cp.x + 14) + '" y="' + (cp.y + 5) + '">' +
+             t(isRead ? "emptyRead" : "emptyBuild") + '</text>';
+      }
+      if (!isRead) {
+        s += '<line class="caret" x1="' + (cp.x - 9) + '" x2="' + (cp.x - 9) + '" y1="' + (cp.y - 22) + '" y2="' + (cp.y + 22) + '"/>';
+      }
+      if (R) {
+        R.extra.forEach(function (bt) {
+          var xp = xy(Math.max(0, Math.min(bt, total - 0.01)));
+          s += '<text class="xmark" x="' + xp.x + '" y="' + (xp.y + 44) + '">&#215;</text>';
+        });
+      }
+      s += '<line class="ph" data-r="ph" style="display:none" x1="0" x2="0" y1="0" y2="0"/>';
+      s += '</svg>';
+      wrap.innerHTML = s;
+
+      if (!isRead) {
+        var rem = total % BEATS === 0 ? BEATS : BEATS - (total % BEATS);
+        var btns = grid.querySelectorAll(".fig-btn");
+        for (i = 0; i < btns.length; i++) {
+          var tt = btns[i].getAttribute("data-type");
+          var dis = TYPES[tt].beats > rem;
+          btns[i].setAttribute("aria-disabled", dis ? "true" : "false");
+          btns[i].title = dis ? t("noRoomTitle") : "";
+        }
+        undoBtn.disabled = items.length === 0;
+        clearBtn.disabled = items.length === 0;
+      }
+      playBtn.disabled = !P && items.length === 0;
+      if (practBtn) practBtn.disabled = !PR && items.length === 0;
+      if (isRead && !PR && !R) idlePad();
+    }
+
+    function setStatus(msg, warn, good) {
+      statusEl.textContent = msg;
+      statusEl.className = "status" + (warn ? " warn" : "") + (good ? " ok" : "");
+    }
+    function defaultStatus() {
+      var total = totalBeats();
+      if (isRead) {
+        if (!items.length) { setStatus(t(selected().length ? "selectOrNew" : "selectFigs")); return; }
+        setStatus(t("readInfo", { m: pl(Math.ceil(total / BEATS), "measure"), b: BEATS }));
+        return;
+      }
+      if (!items.length) { setStatus(t("buildEmpty")); return; }
+      var msg = pl(Math.ceil(total / BEATS), "measure") + " · " + pl(total, "beat");
+      if (total % BEATS !== 0) { var left = BEATS - (total % BEATS); msg += " · " + t(left === 1 ? "missing1" : "missingN", { n: left }); }
+      if (exampleShown) msg += " · " + t("example");
+      setStatus(msg);
+    }
+
+    /* reproducció */
+    function preview(type) {
+      if (!getCtx() || !TYPES[type].onsets.length) return;
+      var spb = 60 / Number(bpmEl.value), t = ctx.currentTime + 0.01;
+      TYPES[type].onsets.forEach(function (o, ix) { note(ctx.destination, t + o * spb, noteBeats(TYPES[type], ix), spb); });
+    }
+    function schedulePass(t0) {
+      var spb = P.spb, beat = 0, i, T;
+      for (i = 0; i < items.length; i++) {
+        T = TYPES[items[i].t];
+        (function (T, beat) {
+          T.onsets.forEach(function (o, ix) { note(P.master, t0 + (beat + o) * spb, noteBeats(T, ix), spb); });
+        })(T, beat);
+        beat += T.beats;
+      }
+      if (metroEl.checked) {
+        for (var b = 0; b < P.total; b++) {
+          tone(P.master, t0 + b * spb, { f: b % BEATS === 0 ? 2400 : 1700, type: "sine", dur: 0.035, vol: b % BEATS === 0 ? 0.16 : 0.1 });
+        }
+      }
+    }
+    function setPlayUI(playing) {
+      playBtn.querySelector("span").textContent = playing ? t("stop") : t(isRead ? "listen" : "play");
+      playBtn.querySelector("svg").innerHTML = playing ? '<rect x="3" y="3" width="10" height="10" rx="1"/>' : '<path d="M3 2l11 6-11 6z"/>';
+      playBtn.disabled = false;
+    }
+    function startPlay() {
+      if (!items.length || !getCtx()) return;
+      abortPractice();
+      var total = totalBeats();
+      P = { spb: 60 / Number(bpmEl.value), total: total, master: ctx.createGain(), t0: ctx.currentTime + 0.1, queued: false, raf: 0 };
+      P.master.gain.value = 0.9;
+      P.master.connect(ctx.destination);
+      schedulePass(P.t0);
+      setPlayUI(true);
+      setStatus(t("playing"));
+      P.raf = requestAnimationFrame(frame);
+    }
+    function stopPlay() {
+      if (!P) return;
+      cancelAnimationFrame(P.raf);
+      try { P.master.disconnect(); } catch (e) {}
+      P = null;
+      var ph = wrap.querySelector('[data-r="ph"]'); if (ph) ph.style.display = "none";
+      var on = wrap.querySelectorAll(".fig.playing");
+      for (var i = 0; i < on.length; i++) on[i].classList.remove("playing");
+      setPlayUI(false);
+      defaultStatus();
+      playBtn.disabled = items.length === 0;
+    }
+    function frame() {
+      if (!P) return;
+      var el = (ctx.currentTime - P.t0) / P.spb;
+      if (el < 0) el = 0;
+      if (loopEl.checked && !P.queued && el >= P.total - 0.5) {
+        schedulePass(P.t0 + P.total * P.spb);
+        P.queued = true;
+      }
+      if (el >= P.total) {
+        if (loopEl.checked && P.queued) { P.t0 += P.total * P.spb; P.queued = false; el -= P.total; }
+        else { stopPlay(); return; }
+      }
+      var pos = xy(el), ph = wrap.querySelector('[data-r="ph"]');
+      if (ph) {
+        ph.style.display = "";
+        ph.setAttribute("x1", pos.x - 9); ph.setAttribute("x2", pos.x - 9);
+        ph.setAttribute("y1", pos.row * RH + 20); ph.setAttribute("y2", pos.row * RH + 104);
+      }
+      var figs = wrap.querySelectorAll(".fig[data-i]");
+      for (var i = 0; i < figs.length; i++) {
+        var it = items[i], on = it && el >= it._start && el < it._start + TYPES[it.t].beats;
+        figs[i].classList.toggle("playing", !!on);
+      }
+      P.raf = requestAnimationFrame(frame);
+    }
+
+    /* pràctica (lectura): l'alumne toca el ritme */
+    var padFlash = 0;
+    function setPad(state, main, sub) {
+      if (!pad) return;
+      var k = state + "|" + main + "|" + (sub || "");
+      if (k === padKey) return;
+      padKey = k;
+      pad.setAttribute("data-state", state);
+      pad.querySelector(".pad-main").textContent = main;
+      pad.querySelector(".pad-sub").textContent = sub || "";
+    }
+    function idlePad() {
+      if (items.length) setPad("idle", t("padIdle"), t("padIdleSub"));
+      else setPad("off", t("padOff"), t("padOffSub"));
+    }
+    function setPractUI(active) {
+      practBtn.querySelector("span").textContent = active ? t("cancel") : t("practice");
+      practBtn.querySelector("svg").innerHTML = active ? '<rect x="3" y="3" width="10" height="10" rx="1"/>' : '<circle cx="8" cy="8" r="5"/>';
+      practBtn.disabled = !active && items.length === 0;
+    }
+    function expectedOnsets() {
+      var out = [], beat = 0;
+      items.forEach(function (it, i) {
+        var T = TYPES[it.t];
+        T.onsets.forEach(function (o) { out.push({ beat: beat + o, fig: i }); });
+        beat += T.beats;
+      });
+      return out;
+    }
+    function startPractice() {
+      if (!items.length || !getCtx()) return;
+      if (P) stopPlay();
+      if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+      R = null;
+      var spb = 60 / Number(bpmEl.value), total = totalBeats(), exp = expectedOnsets(), minGap = 1, i;
+      for (i = 1; i < exp.length; i++) minGap = Math.min(minGap, exp[i].beat - exp[i - 1].beat);
+      var t0 = ctx.currentTime + 0.25 + BEATS * spb;
+      PR = { spb: spb, total: total, t0: t0, tol: Math.min(0.25, minGap * 0.45), taps: [], master: ctx.createGain(), raf: 0 };
+      PR.master.gain.value = 0.9;
+      PR.master.connect(ctx.destination);
+      for (i = 0; i < BEATS; i++) {
+        tone(PR.master, t0 - (BEATS - i) * spb, { f: i === 0 ? 2400 : 1700, type: "sine", dur: 0.05, vol: i === 0 ? 0.3 : 0.22 });
+      }
+      if (metroEl.checked) {
+        for (i = 0; i < total; i++) {
+          tone(PR.master, t0 + i * spb, { f: i % BEATS === 0 ? 2400 : 1700, type: "sine", dur: 0.05, vol: i % BEATS === 0 ? 0.3 : 0.22 });
+        }
+      }
+      padKey = "";
+      render();
+      setPractUI(true);
+      setStatus(t("practiceStart"));
+      PR.raf = requestAnimationFrame(practFrame);
+    }
+    function abortPractice(refresh) {
+      if (!PR) return;
+      cancelAnimationFrame(PR.raf);
+      try { PR.master.disconnect(); } catch (e) {}
+      PR = null;
+      var ph = wrap.querySelector('[data-r="ph"]'); if (ph) ph.style.display = "none";
+      setPractUI(false);
+      padKey = "";
+      idlePad();
+      if (refresh) defaultStatus();
+    }
+    function practFrame() {
+      if (!PR) return;
+      var el = (ctx.currentTime - PR.t0) / PR.spb;
+      var pos = xy(Math.max(0, Math.min(el, PR.total - 0.001))), ph = wrap.querySelector('[data-r="ph"]');
+      if (ph) {
+        ph.style.display = "";
+        ph.setAttribute("x1", pos.x - 9); ph.setAttribute("x2", pos.x - 9);
+        ph.setAttribute("y1", pos.row * RH + 20); ph.setAttribute("y2", pos.row * RH + 104);
+      }
+      if (el < 0) setPad("count", String(Math.max(1, Math.min(BEATS, Math.floor(el + BEATS) + 1))), t("padCount"));
+      else setPad("go", t("padGo"), t("padGoSub"));
+      if (el >= PR.total + 0.5) { finishPractice(); return; }
+      PR.raf = requestAnimationFrame(practFrame);
+    }
+    function tap() {
+      if (!PR) return;
+      var now = ctx.currentTime, el = (now - PR.t0) / PR.spb;
+      tone(ctx.destination, now, { f: 420, type: "triangle", dur: 0.12, vol: 0.5 });
+      pad.classList.add("hit");
+      clearTimeout(padFlash);
+      padFlash = setTimeout(function () { pad.classList.remove("hit"); }, 110);
+      if (el >= -PR.tol) PR.taps.push(el);
+    }
+    function finishPractice() {
+      var tol = PR.tol, taps = PR.taps.slice(), exp = expectedOnsets(), total = PR.total;
+      cancelAnimationFrame(PR.raf);
+      try { PR.master.disconnect(); } catch (e) {}
+      PR = null;
+      lastEnd = performance.now();
+      var used = [], figOk = items.map(function () { return true; }), hits = 0, offs = 0, extra = [];
+      exp.forEach(function (e) {
+        var best = -1, bd = 9, j;
+        for (j = 0; j < taps.length; j++) {
+          if (used[j]) continue;
+          var d = Math.abs(taps[j] - e.beat);
+          if (d <= tol && d < bd) { bd = d; best = j; }
+        }
+        if (best >= 0) { used[best] = true; hits++; offs += taps[best] - e.beat; }
+        else figOk[e.fig] = false;
+      });
+      taps.forEach(function (t, j) {
+        if (used[j]) return;
+        extra.push(t);
+        var b = Math.max(0, Math.min(t, total - 0.001)), k, st = 0, bt;
+        for (k = 0; k < items.length; k++) {
+          bt = TYPES[items[k].t].beats;
+          if (b < st + bt) { figOk[k] = false; break; }
+          st += bt;
+        }
+      });
+      R = { ok: figOk, extra: extra };
+      setPractUI(false);
+      render();
+      var miss = exp.length - hits, good = miss === 0 && extra.length === 0;
+      var avg = hits ? offs / hits : 0;
+      var tt = hits && Math.abs(avg) > 0.07 ? t(avg > 0 ? "late" : "early") : "";
+      padKey = "";
+      if (good) {
+        setPad("ok", t("padOk"), t("padOkSub"));
+        setStatus(t(exp.length ? "okRhythm" : "okRests") + tt, false, true);
+      } else if (!exp.length) {
+        setPad("bad", t("padRestsOnly"), t("padRestsOnlySub"));
+        setStatus(t("statusRestsOnly"), true);
+      } else {
+        var parts = [];
+        if (miss) parts.push(t(miss === 1 ? "missPiece1" : "missPieceN", { n: miss }));
+        if (extra.length) parts.push(t(extra.length === 1 ? "extraPiece1" : "extraPieceN", { n: extra.length }));
+        var m = t("badBase", { h: hits, e: exp.length }) + (parts.length ? ", " + parts.join(t("and")) : "") + t("badEnd") + tt;
+        setPad("bad", t("padBad"), t("padHits", { h: hits, e: exp.length }) + (extra.length ? t("padExtra", { n: extra.length }) : ""));
+        setStatus(m, true);
+      }
+    }
+
+    /* edició (constructor) */
+    function add(type) {
+      var total = totalBeats(), rem = total % BEATS === 0 ? BEATS : BEATS - (total % BEATS);
+      var T = TYPES[type];
+      if (T.beats > rem) {
+        setStatus(t(rem === 1 ? "noFit1" : "noFitN", { d: pl(T.beats, "beat"), r: rem }), true);
+        return;
+      }
+      if (P) stopPlay();
+      exampleShown = false;
+      items.push({ t: type });
+      render(); defaultStatus(); preview(type);
+    }
+    function undo() {
+      if (!items.length) return;
+      if (P) stopPlay();
+      items.pop(); render(); defaultStatus();
+    }
+    function clearAll() {
+      if (P) stopPlay();
+      items = []; exampleShown = false; render(); defaultStatus();
+    }
+
+    /* generació (lectura) */
+    function selected() { return ORDER.filter(function (k) { return sel[k]; }); }
+    function generate() {
+      abortPractice();
+      R = null;
+      if (P) stopPlay();
+      var chosen = selected();
+      items = [];
+      if (!chosen.length) {
+        render();
+        setStatus(t("noFill"));
+        return;
+      }
+      var reach = [true], r, m;
+      for (r = 1; r <= BEATS; r++) {
+        reach[r] = chosen.some(function (k) { var b = TYPES[k].beats; return b <= r && reach[r - b]; });
+      }
+      if (!reach[BEATS]) {
+        render();
+        setStatus(t("cantFill", { b: BEATS }), true);
+        return;
+      }
+      for (m = 0; m < nMeas; m++) {
+        var rem = BEATS;
+        while (rem > 0) {
+          var cands = chosen.filter(function (k) { var b = TYPES[k].beats; return b <= rem && reach[rem - b]; });
+          var pick = cands[Math.floor(Math.random() * cands.length)];
+          items.push({ t: pick });
+          rem -= TYPES[pick].beats;
+        }
+      }
+      render(); defaultStatus();
+    }
+    function syncPalette() {
+      var btns = grid.querySelectorAll(".fig-btn");
+      for (var i = 0; i < btns.length; i++) {
+        btns[i].setAttribute("aria-pressed", sel[btns[i].getAttribute("data-type")] ? "true" : "false");
+      }
+    }
+    function toggle(k) {
+      sel[k] = !sel[k];
+      syncPalette();
+      if (sel[k]) preview(k);
+      generate();
+    }
+
+    /* compàs */
+    function setPressed(group, val) {
+      var bs = group.querySelectorAll("button");
+      for (var i = 0; i < bs.length; i++) bs[i].setAttribute("aria-pressed", Number(bs[i].getAttribute("data-n")) === val ? "true" : "false");
+    }
+    function setMeter(n) {
+      if (n === BEATS) return;
+      if (P) stopPlay();
+      BEATS = n;
+      setPressed(q("meter"), BEATS);
+      var mt = q("meterTxt"); if (mt) mt.textContent = BEATS + "/4";
+      if (isRead) { generate(); return; }
+      var pos = 0, changed = 0, i, b, room;
+      for (i = 0; i < items.length; i++) {
+        b = TYPES[items[i].t].beats;
+        room = BEATS - (pos % BEATS);
+        if (b > room) { items[i] = { t: TYPES[items[i].t].isRest ? "rest" : "quarter" }; b = 1; changed++; }
+        pos += b;
+      }
+      render(); defaultStatus();
+      if (changed) {
+        setStatus(t(changed === 1 ? "meterChanged1" : "meterChangedN", { b: BEATS, n: changed }), true);
+      }
+    }
+
+    /* esdeveniments */
+    q("meter").addEventListener("click", function (e) {
+      var b = e.target.closest("button"); if (b) setMeter(Number(b.getAttribute("data-n")));
+    });
+    if (isRead) {
+      q("meas").addEventListener("click", function (e) {
+        var b = e.target.closest("button"); if (!b) return;
+        nMeas = Number(b.getAttribute("data-n"));
+        setPressed(q("meas"), nMeas);
+        generate();
+      });
+      genBtn.addEventListener("click", generate);
+      practBtn.addEventListener("click", function () { PR ? abortPractice(true) : startPractice(); });
+      pad.addEventListener("pointerdown", function (e) {
+        e.preventDefault();
+        if (PR) tap();
+        else if (performance.now() - lastEnd > 700) startPractice();
+      });
+      pad.addEventListener("click", function (e) {
+        if (e.detail !== 0) return;
+        if (PR) tap(); else startPractice();
+      });
+      q("all").addEventListener("click", function () { ORDER.forEach(function (k) { sel[k] = true; }); syncPalette(); generate(); });
+      q("none").addEventListener("click", function () { ORDER.forEach(function (k) { sel[k] = false; }); syncPalette(); generate(); });
+    } else {
+      undoBtn.addEventListener("click", undo);
+      clearBtn.addEventListener("click", clearAll);
+    }
+    grid.addEventListener("click", function (e) {
+      var b = e.target.closest(".fig-btn"); if (!b) return;
+      var k = b.getAttribute("data-type");
+      if (isRead) toggle(k); else add(k);
+    });
+    playBtn.addEventListener("click", function () { P ? stopPlay() : startPlay(); });
+    bpmEl.addEventListener("input", function () {
+      bpmOut.textContent = t("bpmOut", { n: bpmEl.value });
+      abortPractice(true);
+      if (P) { stopPlay(); startPlay(); }
+    });
+    metroEl.addEventListener("change", function () { if (P) { stopPlay(); startPlay(); } else if (PR) { abortPractice(); startPractice(); } });
+    countEl.addEventListener("change", function () { var was = P; if (was) stopPlay(); render(); defaultStatus(); if (was) startPlay(); });
+
+    var lastW = 0;
+    var ro = null;
+    if (window.ResizeObserver) {
+      ro = new ResizeObserver(function () {
+        var w = wrap.clientWidth;
+        if (!w || w === lastW) return;
+        lastW = w;
+        var was = P; if (was) stopPlay();
+        render(); if (!items.length || !was) defaultStatus(); if (was) startPlay();
+      });
+      ro.observe(wrap);
+    }
+
+    if (isRead) generate();
+
+    return {
+      show: function () { render(); defaultStatus(); },
+      stop: function () { stopPlay(); abortPractice(); },
+      destroy: function () { stopPlay(); abortPractice(); if (ro) ro.disconnect(); },
+      keyup: function (e) {
+        return isRead && (e.key === " " || e.code === "Space") && (!!PR || performance.now() - lastEnd < 800);
+      },
+      key: function (e) {
+        if (isRead && (e.key === " " || e.code === "Space")) {
+          if (!PR) return false;
+          if (!e.repeat) tap();
+          return true;
+        }
+        if (KEYMAP[e.key]) { if (isRead) toggle(KEYMAP[e.key]); else add(KEYMAP[e.key]); return true; }
+        if (isRead && (e.key === "n" || e.key === "N")) { generate(); return true; }
+        if (!isRead && e.key === "Backspace") { undo(); return true; }
+        return false;
+      }
+    };
+  }
+
+  /* ---------- dictat de ritmes (escoltar i escriure) ---------- */
+  var EPS = 1e-6;
+  function noteDur(T, i) {
+    if (T.durs) return T.durs[i];
+    if (T.onsets.length > 1) return T.onsets[1] - T.onsets[0];
+    return T.beats;
+  }
+  /* nota amb durada audible: es nota la diferència entre negra, blanca, redona i silencis */
+  function sus(dest, tm, dur) {
+    dur = Math.max(0.07, dur * 0.88);
+    var osc = ctx.createOscillator(), g = ctx.createGain(), rel = Math.min(0.05, dur * 0.4);
+    osc.type = "triangle";
+    osc.frequency.value = 560;
+    g.gain.setValueAtTime(0.0001, tm);
+    g.gain.linearRampToValueAtTime(0.5, tm + 0.006);
+    g.gain.setValueAtTime(0.5, tm + dur - rel);
+    g.gain.exponentialRampToValueAtTime(0.0001, tm + dur);
+    osc.connect(g); g.connect(dest);
+    osc.start(tm); osc.stop(tm + dur + 0.03);
+  }
+  function notesOf(list) {
+    var out = [], beat = 0;
+    list.forEach(function (it) {
+      var T = TYPES[it.t], b0 = beat;
+      T.onsets.forEach(function (o, ix) { out.push({ on: b0 + o, d: noteDur(T, ix) }); });
+      beat += T.beats;
+    });
+    return out;
+  }
+  function sumBeats(list) {
+    var n = 0, i;
+    for (i = 0; i < list.length; i++) n += TYPES[list[i].t].beats;
+    return n;
+  }
+
+  function makeDictation(root, level) {
+    var BEATS = 4, nMeas = 1;
+    var ORDER = LEVELS[level].slice(), KEYMAP = {}, KEYLBL = {};
+    ORDER.forEach(function (k, i) { KEYMAP[KEYCH[i]] = k; KEYLBL[k] = KEYCH[i]; });
+    var target = [], items = [], R = null, resMsg = null, viewSol = false;
+    var checkedThis = false, solvedThis = false, tried = 0, wins = 0;
+    var P = null, spaceDown = false;
+    var L = { bw: 64, mw: 280, mpr: 2, W: 600 };
+    var PLAY_ICON = '<path d="M3 2l11 6-11 6z"/>', STOP_ICON = '<rect x="3" y="3" width="10" height="10" rx="1"/>';
+    var uid = "-dict";
+
+    /* plantilla */
+    var h = '<section class="stage" aria-label="' + t("stageAria") + '"><div class="bar"><div class="btns">';
+    h += '<button class="btn primary" type="button" data-r="play"><svg viewBox="0 0 16 16" aria-hidden="true">' + PLAY_ICON + '</svg><span>' + t("listen") + '</span></button>';
+    h += '<button class="btn" type="button" data-r="mine"><svg viewBox="0 0 16 16" aria-hidden="true">' + PLAY_ICON + '</svg><span>' + t("listenMine") + '</span></button>';
+    h += '<button class="btn strong" type="button" data-r="check">' + t("check") + '</button>';
+    h += '<button class="btn" type="button" data-r="undo">' + t("undo") + '</button>';
+    h += '<button class="btn" type="button" data-r="clear">' + t("clear") + '</button>';
+    h += '<button class="btn" type="button" data-r="sol">' + t("showSol") + '</button>';
+    h += '<button class="btn" type="button" data-r="gen">' + t("newDict") + '</button>';
+    h += '</div><div class="opts"><span class="score" data-r="score"></span>';
+    h += '<div class="meter"><span id="meterLbl' + uid + '">' + t("meter") + '</span><div class="seg" data-r="meter" role="group" aria-labelledby="meterLbl' + uid + '">' +
+         '<button type="button" data-n="2" aria-pressed="false">2/4</button>' +
+         '<button type="button" data-n="3" aria-pressed="false">3/4</button>' +
+         '<button type="button" data-n="4" aria-pressed="true">4/4</button></div></div>';
+    h += '<div class="meter"><span id="measLbl' + uid + '">' + t("measures") + '</span><div class="seg" data-r="meas" role="group" aria-labelledby="measLbl' + uid + '">' +
+         '<button type="button" data-n="1" aria-pressed="true">1</button>' +
+         '<button type="button" data-n="2" aria-pressed="false">2</button>' +
+         '<button type="button" data-n="4" aria-pressed="false">4</button></div></div>';
+    h += '<div class="tempo"><label for="bpm' + uid + '">' + t("tempo") + '</label><input type="range" id="bpm' + uid + '" data-r="bpm" min="40" max="180" step="2" value="60">' +
+         '<output data-r="bpmOut" for="bpm' + uid + '">' + t("bpmOut", { n: 60 }) + '</output></div>';
+    h += '<label class="chk"><input type="checkbox" data-r="metro" checked> ' + t("metronome") + '</label>';
+    h += '<label class="chk"><input type="checkbox" data-r="loop"> ' + t("loop") + '</label>';
+    h += '<label class="chk"><input type="checkbox" data-r="count" checked> ' + t("showCount") + '</label>';
+    h += '</div></div><div class="stage-main"><div class="staff-wrap" data-r="wrap"></div></div>' +
+         '<div class="status" data-r="status" role="status" aria-live="polite"></div></section>';
+    h += '<section class="palette" aria-label="' + t("figuresAria") + '"><div class="head"><h2>' + t("figures") + '</h2>' +
+         '<p>' + t("dictHelp", { m: '<span data-r="meterTxt">4/4</span>' }) + '</p></div><div class="grid" data-r="grid"></div></section>';
+    root.innerHTML = h;
+
+    function q(n) { return root.querySelector('[data-r="' + n + '"]'); }
+    var wrap = q("wrap"), statusEl = q("status"), grid = q("grid");
+    var playBtn = q("play"), mineBtn = q("mine"), checkBtn = q("check"), undoBtn = q("undo"), clearBtn = q("clear");
+    var solBtn = q("sol"), genBtn = q("gen"), scoreEl = q("score");
+    var bpmEl = q("bpm"), bpmOut = q("bpmOut"), metroEl = q("metro"), loopEl = q("loop"), countEl = q("count");
+
+    grid.innerHTML = ORDER.map(function (k) {
+      return '<button type="button" class="fig-btn" data-type="' + k + '"' +
+        ' aria-label="' + t("addLabel", { name: tName(k).toLowerCase(), dur: tDur(k) }) + '">' +
+        paletteSVG(k) +
+        '<span class="name">' + tName(k) + '</span>' +
+        '<span class="dur">' + tDur(k) + ' &middot; <kbd>' + KEYLBL[k] + '</kbd></span></button>';
+    }).join("");
+
+    function cap() { return BEATS * nMeas; }
+    function layout() {
+      var W = wrap.clientWidth - 24;
+      if (W < 100) W = 600;
+      L.W = W;
+      L.bw = Math.max(40, Math.min(54, (W - PREFIX - 8 - 24) / BEATS));
+      L.mw = BEATS * L.bw + 24;
+      L.mpr = Math.max(1, Math.floor((W - PREFIX - 8) / L.mw));
+    }
+    function xy(beat) {
+      var m = Math.floor(beat / BEATS);
+      var col = m % L.mpr, row = Math.floor(m / L.mpr);
+      return { x: PREFIX + col * L.mw + 16 + (beat % BEATS) * L.bw, y: row * RH + LINE_Y, row: row };
+    }
+    function setPressed(group, val) {
+      var bs = group.querySelectorAll("button");
+      for (var i = 0; i < bs.length; i++) bs[i].setAttribute("aria-pressed", Number(bs[i].getAttribute("data-n")) === val ? "true" : "false");
+    }
+    function setStatus(msg, warn, good) {
+      statusEl.textContent = msg;
+      statusEl.className = "status" + (warn ? " warn" : "") + (good ? " ok" : "");
+    }
+    function setBtn(btn, playing, label) {
+      btn.querySelector("span").textContent = playing ? t("stop") : label;
+      btn.querySelector("svg").innerHTML = playing ? STOP_ICON : PLAY_ICON;
+    }
+    function updateScore() {
+      scoreEl.textContent = tried ? t("score", { c: wins, a: tried }) : "";
+    }
+
+    /* pintat */
+    function render() {
+      layout();
+      var list = viewSol ? target : items, total = sumBeats(list), c = cap();
+      var rows = Math.ceil(nMeas / L.mpr), H = rows * RH + 4;
+      var s = '<svg viewBox="0 0 ' + L.W + ' ' + H + '" preserveAspectRatio="xMidYMin meet" role="img" aria-label="' + t("staffAria", { n: pl(list.length, "figure") }) + '">';
+      var r, m, col, y, i, p, T, k, beat = 0, showCount = countEl.checked;
+      for (r = 0; r < rows; r++) {
+        y = r * RH + LINE_Y;
+        var inRow = Math.min(L.mpr, nMeas - r * L.mpr);
+        s += '<line class="staffline" x1="6" x2="' + (PREFIX + inRow * L.mw) + '" y1="' + y + '" y2="' + y + '"/>';
+        s += '<rect class="clef" x="12" y="' + (y - 12) + '" width="4.5" height="24" rx="1"/>';
+        s += '<rect class="clef" x="21" y="' + (y - 12) + '" width="4.5" height="24" rx="1"/>';
+        if (r === 0) s += '<text class="sig" x="44" y="' + (y - 3) + '">' + BEATS + '</text><text class="sig" x="44" y="' + (y + 17) + '">4</text>';
+      }
+      for (m = 0; m < nMeas; m++) {
+        col = m % L.mpr; r = Math.floor(m / L.mpr); y = r * RH + LINE_Y;
+        var bx = PREFIX + (col + 1) * L.mw - 6;
+        s += '<text class="mnum" x="' + (PREFIX + col * L.mw + 4) + '" y="' + (r * RH + 16) + '">' + (m + 1) + '</text>';
+        s += '<line class="' + (m < Math.floor(total / BEATS) ? 'bar-solid' : 'bar-open') + '" x1="' + bx + '" x2="' + bx + '" y1="' + (y - 14) + '" y2="' + (y + 14) + '"/>';
+      }
+      for (i = 0; i < list.length; i++) {
+        T = TYPES[list[i].t];
+        p = xy(beat);
+        var cls = (!viewSol && R) ? (R.ok[i] ? ' ok' : ' bad') : '';
+        s += '<g class="fig' + cls + '" data-i="' + i + '" transform="translate(' + p.x + ' ' + p.y + ')">' + figHTML(list[i].t, L.bw) + '</g>';
+        if (cls) s += '<text class="mk' + cls + '" x="' + p.x + '" y="' + (p.y - 48) + '">' + (R.ok[i] ? '&#10003;' : '&#10007;') + '</text>';
+        if (showCount) {
+          for (k = 1; k < T.onsets.length; k++) {
+            var qq = xy(beat + T.onsets[k]);
+            s += '<text class="cnt sub" x="' + qq.x + '" y="' + (qq.y + 30) + '">' + T.subs[k] + '</text>';
+          }
+        }
+        beat += T.beats;
+      }
+      if (showCount) {
+        for (var b = 0; b < total; b++) {
+          var cc = xy(b);
+          s += '<text class="cnt" x="' + cc.x + '" y="' + (cc.y + 30) + '">' + ((b % BEATS) + 1) + '</text>';
+        }
+      }
+      var cp = xy(Math.min(total, c - 0.001));
+      if (!list.length) s += '<text class="hint-empty" x="' + (xy(0).x + 14) + '" y="' + (xy(0).y + 5) + '">' + t("emptyDict") + '</text>';
+      if (!viewSol && total < c) {
+        cp = xy(total);
+        s += '<line class="caret" x1="' + (cp.x - 9) + '" x2="' + (cp.x - 9) + '" y1="' + (cp.y - 22) + '" y2="' + (cp.y + 22) + '"/>';
+      }
+      s += '<line class="ph" data-r="ph" style="display:none" x1="0" x2="0" y1="0" y2="0"/>';
+      s += '</svg>';
+      wrap.innerHTML = s;
+
+      var mt = sumBeats(items), rem = mt >= c ? 0 : (mt % BEATS === 0 ? BEATS : BEATS - (mt % BEATS));
+      var btns = grid.querySelectorAll(".fig-btn");
+      for (i = 0; i < btns.length; i++) {
+        var dis = TYPES[btns[i].getAttribute("data-type")].beats > rem;
+        btns[i].setAttribute("aria-disabled", dis ? "true" : "false");
+        btns[i].title = dis ? t(mt >= c ? "dictFull" : "noRoomTitle") : "";
+      }
+      syncButtons();
+      updateScore();
+    }
+    function syncButtons() {
+      var mt = sumBeats(items);
+      undoBtn.disabled = !items.length;
+      clearBtn.disabled = !items.length;
+      mineBtn.disabled = !items.length;
+      checkBtn.disabled = viewSol || mt !== cap();
+      solBtn.textContent = t(viewSol ? "hideSol" : "showSol");
+      setBtn(playBtn, !!P && P.which === "target", t("listen"));
+      setBtn(mineBtn, !!P && P.which === "mine", t("listenMine"));
+    }
+    function defaultStatus() {
+      if (viewSol) { setStatus(t("solShown")); return; }
+      if (R && resMsg) { setStatus(resMsg.m, resMsg.w, resMsg.g); return; }
+      var total = sumBeats(items), c = cap();
+      if (!items.length) { setStatus(t("dictStart")); return; }
+      var msg = pl(items.length, "figure") + " · " + pl(total, "beat");
+      if (total < c) { var left = c - total; msg += " · " + t(left === 1 ? "dMissing1" : "dMissingN", { n: left }); }
+      else msg += " · " + t("dictReady");
+      setStatus(msg);
+    }
+
+    /* so */
+    function preview(type) {
+      var T = TYPES[type];
+      if (!T.onsets.length || !getCtx()) return;
+      var spb = 60 / Number(bpmEl.value), tm = ctx.currentTime + 0.01;
+      T.onsets.forEach(function (o, ix) { sus(ctx.destination, tm + o * spb, noteDur(T, ix) * spb); });
+    }
+    function schedulePass(t0) {
+      var spb = P.spb, beat = 0, b;
+      P.list.forEach(function (it) {
+        var T = TYPES[it.t], b0 = beat;
+        T.onsets.forEach(function (o, ix) { sus(P.master, t0 + (b0 + o) * spb, noteDur(T, ix) * spb); });
+        beat += T.beats;
+      });
+      if (metroEl.checked) {
+        for (b = 0; b < P.total; b++) {
+          tone(P.master, t0 + b * spb, { f: b % BEATS === 0 ? 2400 : 1700, type: "sine", dur: 0.035, vol: b % BEATS === 0 ? 0.16 : 0.1 });
+        }
+      }
+    }
+    function startPlay(which) {
+      var list = which === "mine" ? items.slice() : target.slice();
+      if (!list.length || !getCtx()) return;
+      stopPlay();
+      var spb = 60 / Number(bpmEl.value), t0 = ctx.currentTime + 0.25 + BEATS * spb, i;
+      P = { which: which, list: list, spb: spb, total: sumBeats(list), t0: t0, queued: false, master: ctx.createGain(), raf: 0 };
+      P.master.gain.value = 0.9;
+      P.master.connect(ctx.destination);
+      for (i = 0; i < BEATS; i++) {
+        tone(P.master, t0 - (BEATS - i) * spb, { f: i === 0 ? 2400 : 1700, type: "sine", dur: 0.05, vol: i === 0 ? 0.3 : 0.22 });
+      }
+      schedulePass(t0);
+      syncButtons();
+      setStatus(t(which === "mine" ? "minePlaying" : "dictPlaying"));
+      P.raf = requestAnimationFrame(frame);
+    }
+    function stopPlay() {
+      if (!P) return;
+      cancelAnimationFrame(P.raf);
+      try { P.master.disconnect(); } catch (e) {}
+      P = null;
+      var ph = wrap.querySelector('[data-r="ph"]'); if (ph) ph.style.display = "none";
+      var on = wrap.querySelectorAll(".fig.playing");
+      for (var i = 0; i < on.length; i++) on[i].classList.remove("playing");
+      syncButtons();
+      defaultStatus();
+    }
+    function frame() {
+      if (!P) return;
+      var el = (ctx.currentTime - P.t0) / P.spb, ph = wrap.querySelector('[data-r="ph"]');
+      if (el < 0) {
+        if (ph) ph.style.display = "none";
+      } else {
+        if (loopEl.checked && !P.queued && el >= P.total - 0.5) {
+          schedulePass(P.t0 + P.total * P.spb);
+          P.queued = true;
+        }
+        if (el >= P.total) {
+          if (loopEl.checked && P.queued) { P.t0 += P.total * P.spb; P.queued = false; el -= P.total; }
+          else { stopPlay(); return; }
+        }
+        var pos = xy(el);
+        if (ph) {
+          ph.style.display = "";
+          ph.setAttribute("x1", pos.x - 9); ph.setAttribute("x2", pos.x - 9);
+          ph.setAttribute("y1", pos.row * RH + 20); ph.setAttribute("y2", pos.row * RH + 104);
+        }
+        if (P.which === "mine" && !viewSol) {
+          var figs = wrap.querySelectorAll(".fig[data-i]"), beat = 0, i;
+          for (i = 0; i < figs.length && i < P.list.length; i++) {
+            var bt = TYPES[P.list[i].t].beats;
+            figs[i].classList.toggle("playing", el >= beat && el < beat + bt);
+            beat += bt;
+          }
+        }
+      }
+      P.raf = requestAnimationFrame(frame);
+    }
+
+    /* edició */
+    function add(type) {
+      var mt = sumBeats(items), c = cap();
+      if (mt >= c) { setStatus(t("dictFull"), true); return; }
+      var rem = mt % BEATS === 0 ? BEATS : BEATS - (mt % BEATS), T = TYPES[type];
+      if (T.beats > rem) {
+        setStatus(t(rem === 1 ? "noFit1" : "noFitN", { d: pl(T.beats, "beat"), r: rem }), true);
+        return;
+      }
+      if (P && P.which === "mine") stopPlay();
+      viewSol = false; R = null; resMsg = null;
+      items.push({ t: type });
+      render(); defaultStatus();
+      if (!P) preview(type);
+    }
+    function undo() {
+      if (!items.length) return;
+      if (P && P.which === "mine") stopPlay();
+      viewSol = false; R = null; resMsg = null;
+      items.pop(); render(); defaultStatus();
+    }
+    function clearAll() {
+      if (P && P.which === "mine") stopPlay();
+      viewSol = false; R = null; resMsg = null;
+      items = []; render(); defaultStatus();
+    }
+    function toggleSol() {
+      if (P && P.which === "mine") stopPlay();
+      viewSol = !viewSol;
+      render(); defaultStatus();
+    }
+
+    /* comprovació */
+    function check() {
+      var mt = sumBeats(items), c = cap();
+      if (viewSol) return;
+      if (mt !== c) {
+        var left = c - mt;
+        setStatus(t(left === 1 ? "dMissing1" : "dMissingN", { n: left }), true);
+        return;
+      }
+      stopPlay();
+      var tn = notesOf(target), ok = [], hits = 0, beat = 0;
+      items.forEach(function (it) {
+        var T = TYPES[it.t], b0 = beat, b1 = beat + T.beats;
+        var mine = T.onsets.map(function (o, ix) { return { on: b0 + o, d: noteDur(T, ix) }; });
+        var want = tn.filter(function (n) { return n.on >= b0 - EPS && n.on < b1 - EPS; });
+        var same = mine.length === want.length && mine.every(function (n, i) {
+          return Math.abs(n.on - want[i].on) < EPS && Math.abs(n.d - want[i].d) < EPS;
+        });
+        ok.push(same);
+        if (same) hits++;
+        beat = b1;
+      });
+      R = { ok: ok };
+      var good = hits === items.length;
+      if (!checkedThis) { checkedThis = true; tried++; }
+      if (good && !solvedThis) { solvedThis = true; wins++; }
+      resMsg = good ? { m: t("okDict"), w: false, g: true }
+                    : { m: t("badDict", { h: hits, n: items.length }), w: true, g: false };
+      render(); defaultStatus();
+    }
+
+    /* generació */
+    function generate() {
+      stopPlay();
+      var prev = JSON.stringify(target), reach = [true], r, m, tries = 0;
+      R = null; resMsg = null; viewSol = false; items = [];
+      checkedThis = false; solvedThis = false;
+      for (r = 1; r <= BEATS; r++) {
+        reach[r] = ORDER.some(function (k) { var b = TYPES[k].beats; return b <= r && reach[r - b]; });
+      }
+      do {
+        target = [];
+        for (m = 0; m < nMeas; m++) {
+          var rem = BEATS;
+          while (rem > 0) {
+            var cands = ORDER.filter(function (k) { var b = TYPES[k].beats; return b <= rem && reach[rem - b]; });
+            var pick = cands[Math.floor(Math.random() * cands.length)];
+            target.push({ t: pick });
+            rem -= TYPES[pick].beats;
+          }
+        }
+        tries++;
+      } while ((!notesOf(target).length || JSON.stringify(target) === prev) && tries < 60);
+      render(); defaultStatus();
+    }
+
+    function setMeter(n) {
+      if (n === BEATS) return;
+      BEATS = n;
+      setPressed(q("meter"), BEATS);
+      var mt = q("meterTxt"); if (mt) mt.textContent = BEATS + "/4";
+      generate();
+    }
+
+    /* esdeveniments */
+    q("meter").addEventListener("click", function (e) {
+      var b = e.target.closest("button"); if (b) setMeter(Number(b.getAttribute("data-n")));
+    });
+    q("meas").addEventListener("click", function (e) {
+      var b = e.target.closest("button"); if (!b) return;
+      var n = Number(b.getAttribute("data-n"));
+      if (n === nMeas) return;
+      nMeas = n;
+      setPressed(q("meas"), nMeas);
+      generate();
+    });
+    grid.addEventListener("click", function (e) {
+      var b = e.target.closest(".fig-btn"); if (b) add(b.getAttribute("data-type"));
+    });
+    playBtn.addEventListener("click", function () { P && P.which === "target" ? stopPlay() : startPlay("target"); });
+    mineBtn.addEventListener("click", function () { P && P.which === "mine" ? stopPlay() : startPlay("mine"); });
+    checkBtn.addEventListener("click", check);
+    undoBtn.addEventListener("click", undo);
+    clearBtn.addEventListener("click", clearAll);
+    solBtn.addEventListener("click", toggleSol);
+    genBtn.addEventListener("click", generate);
+    bpmEl.addEventListener("input", function () {
+      bpmOut.textContent = t("bpmOut", { n: bpmEl.value });
+      if (P) { var w = P.which; stopPlay(); startPlay(w); }
+    });
+    metroEl.addEventListener("change", function () { if (P) { var w = P.which; stopPlay(); startPlay(w); } });
+    countEl.addEventListener("change", function () { render(); });
+
+    var lastW = 0, ro = null;
+    if (window.ResizeObserver) {
+      ro = new ResizeObserver(function () {
+        var w = wrap.clientWidth;
+        if (!w || w === lastW) return;
+        lastW = w;
+        render();
+      });
+      ro.observe(wrap);
+    }
+
+    generate();
+
+    return {
+      show: function () { render(); defaultStatus(); },
+      stop: function () { stopPlay(); },
+      destroy: function () { stopPlay(); if (ro) ro.disconnect(); },
+      keyup: function (e) {
+        if (spaceDown && (e.key === " " || e.code === "Space")) { spaceDown = false; return true; }
+        return false;
+      },
+      key: function (e) {
+        if (e.key === " " || e.code === "Space") {
+          if (!e.repeat) { spaceDown = true; if (P && P.which === "target") stopPlay(); else startPlay("target"); }
+          return true;
+        }
+        if (e.key === "Enter") { check(); return true; }
+        if (KEYMAP[e.key]) { add(KEYMAP[e.key]); return true; }
+        if (e.key === "Backspace") { undo(); return true; }
+        if (e.key === "n" || e.key === "N") { generate(); return true; }
+        return false;
+      }
+    };
+  }
+
+  /* ---------- navegació ---------- */
+  var home = document.getElementById("home");
+  var hdr = document.getElementById("hdr");
+  var langScreen = document.getElementById("langScreen");
+  var langBtn = document.getElementById("langBtn");
+  var viewBuild = document.getElementById("viewBuild");
+  var viewRead = document.getElementById("viewRead");
+  var viewDict = document.getElementById("viewDict");
+  var back = document.getElementById("back");
+  var crumb = document.getElementById("crumb");
+  document.getElementById("miniBuild").innerHTML = miniStaff(["quarter", "eighths", "half", "rest"]);
+  document.getElementById("miniRead").innerHTML = miniStaff(["sixteenths", "rest", "quarter", "eighths"]);
+  document.getElementById("miniLang").innerHTML = miniStaff(["quarter", "eighths", "half", "rest"]);
+  document.getElementById("miniDict").innerHTML = miniStaff(["eighths", "rest", "quarter", "half"]);
+
+  var levelScreen = document.getElementById("levelScreen");
+  var levelGrid = document.getElementById("levelGrid");
+  var levelBtn = document.getElementById("levelBtn");
+  var boards = null;
+  var cur = null;
+  var LEVEL = 0;
+
+  function applyStatic() {
+    var els, i;
+    document.title = t("title");
+    els = document.querySelectorAll("[data-i18n]");
+    for (i = 0; i < els.length; i++) els[i].textContent = t(els[i].getAttribute("data-i18n"));
+    els = document.querySelectorAll("[data-i18n-aria]");
+    for (i = 0; i < els.length; i++) els[i].setAttribute("aria-label", t(els[i].getAttribute("data-i18n-aria")));
+  }
+
+  function renderLevels() {
+    var h = "";
+    [1, 2, 3].forEach(function (n) {
+      var names = LEVELS[n].map(function (k) { return tName(k).toLowerCase(); });
+      var list = names.length > 1 ? names.slice(0, -1).join(", ") + t("and") + names[names.length - 1] : names[0];
+      h += '<button type="button" class="card level-card" data-level="' + n + '">' +
+           '<span class="code">' + t("levelTag" + n) + '</span>' +
+           '<span>' + miniStaff(LEVEL_MINI[n]) + '</span>' +
+           '<h2>' + t("level", { n: n }) + '</h2>' +
+           '<p>' + t("levelFigs", { l: list }) + '</p></button>';
+    });
+    levelGrid.innerHTML = h;
+  }
+
+  function go(name) {
+    if (cur) cur.stop();
+    cur = null;
+    var inBoard = name === "build" || name === "read" || name === "dict";
+    langScreen.hidden = name !== "lang";
+    levelScreen.hidden = name !== "level";
+    hdr.hidden = name === "lang";
+    home.hidden = name !== "home";
+    viewBuild.hidden = name !== "build";
+    viewRead.hidden = name !== "read";
+    viewDict.hidden = name !== "dict";
+    back.hidden = !inBoard;
+    levelBtn.hidden = name === "lang" || name === "level";
+    crumb.hidden = !inBoard;
+    crumb.textContent = inBoard ? t({ build: "buildTitle", read: "readTitle", dict: "dictTitle" }[name]) + " · " + t("level", { n: LEVEL }) : "";
+    if (boards && boards[name]) { cur = boards[name]; cur.show(); }
+  }
+
+  function destroyBoards() {
+    if (cur) cur.stop();
+    cur = null;
+    if (boards) { boards.build.destroy(); boards.read.destroy(); boards.dict.destroy(); }
+    boards = null;
+  }
+
+  function setLang(code) {
+    if (!I18N[code]) code = "va";
+    destroyBoards();
+    LEVEL = 0;
+    LANG = code;
+    document.documentElement.lang = code === "va" ? "ca-valencia" : code;
+    applyStatic();
+    renderLevels();
+    go("level");
+  }
+
+  function setLevel(n) {
+    if (!LEVELS[n]) return;
+    if (n === LEVEL && boards) { go("home"); return; }
+    destroyBoards();
+    LEVEL = n;
+    levelBtn.textContent = t("level", { n: n });
+    boards = { build: makeBoard(viewBuild, "build", n), read: makeBoard(viewRead, "read", n), dict: makeDictation(viewDict, n) };
+    go("home");
+  }
+
+  langScreen.addEventListener("click", function (e) {
+    var c = e.target.closest("[data-lang]");
+    if (c) setLang(c.getAttribute("data-lang"));
+  });
+  levelScreen.addEventListener("click", function (e) {
+    var c = e.target.closest("[data-level]");
+    if (c) setLevel(Number(c.getAttribute("data-level")));
+  });
+  langBtn.addEventListener("click", function () { go("lang"); });
+  levelBtn.addEventListener("click", function () { go("level"); });
+
+  home.addEventListener("click", function (e) {
+    var c = e.target.closest("[data-go]");
+    if (c) go(c.getAttribute("data-go"));
+  });
+  back.addEventListener("click", function () { go("home"); });
+  document.addEventListener("keyup", function (e) {
+    var tag = (e.target && e.target.tagName) || "";
+    if (cur && cur.keyup && tag !== "INPUT" && cur.keyup(e)) e.preventDefault();
+  });
+
+  document.addEventListener("keydown", function (e) {
+    var tag = (e.target && e.target.tagName) || "";
+    if (!cur || tag === "INPUT" || tag === "TEXTAREA" || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (cur.key(e)) e.preventDefault();
+  });
+
+  go("lang");
+})();
+</script>
+</body>
+</html>
